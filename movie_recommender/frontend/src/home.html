@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ContextFlix - Personalized Movie Recommender</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #141414;
+            color: #fff;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 40px 0;
+        }
+        h1 {
+            color: #E50914;
+            font-size: 36px;
+            margin: 0;
+        }
+        h2 {
+            font-size: 24px;
+            margin: 40px 0 20px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        .tagline {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+        
+        .status-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .status-box {
+            background-color: #2D2D2D;
+            border-radius: 8px;
+            padding: 20px;
+            flex: 1 1 250px;
+            text-align: center;
+        }
+        
+        .status-box h3 {
+            margin-top: 0;
+            color: #E50914;
+            font-size: 20px;
+        }
+        
+        .status-box .status {
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        .status-success {
+            color: #29B35B;
+        }
+        
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background-color: #2D2D2D;
+            border-radius: 8px;
+            padding: 20px;
+            flex: 1 1 250px;
+            position: relative;
+            overflow: hidden;
+            min-height: 150px;
+        }
+        
+        .card h3 {
+            margin-top: 0;
+            color: #E50914;
+            font-size: 20px;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .card p {
+            line-height: 1.5;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .button {
+            display: inline-block;
+            background-color: #E50914;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+            z-index: 1;
+            position: relative;
+        }
+        
+        .button:hover {
+            background-color: #B81D24;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            border-top: 1px solid #333;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ContextFlix</h1>
+            <div class="tagline">Personalized Movie Recommender System</div>
+        </header>
+
+        <section>
+            <h2>System Status</h2>
+            <div class="status-container">
+                <div class="status-box">
+                    <h3>Frontend</h3>
+                    <div class="status status-success">Running on port 3000</div>
+                </div>
+                
+                <div class="status-box">
+                    <h3>API Server</h3>
+                    <div class="status status-success">Running on port 5050</div>
+                </div>
+                
+                <div class="status-box">
+                    <h3>React</h3>
+                    <div class="status status-success">Components available</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Application</h2>
+            <div class="card-container">
+                <div class="card">
+                    <h3>Main Application</h3>
+                    <p>The full ContextFlix movie recommendation application with all features.</p>
+                    <a href="app.html" class="button">Launch App</a>
+                </div>
+                
+                <div class="card">
+                    <h3>React Test</h3>
+                    <p>A simple test to verify that React is working correctly.</p>
+                    <a href="test.html" class="button">Open Test</a>
+                </div>
+                
+                <div class="card">
+                    <h3>Connection Test</h3>
+                    <p>Test connectivity to the API server and file access.</p>
+                    <a href="apidiag.html" class="button">Run Tests</a>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Documentation</h2>
+            <div class="card-container">
+                <div class="card">
+                    <h3>API Documentation</h3>
+                    <p>Explore the available API endpoints and how to use them.</p>
+                    <a href="readme.html" class="button">View Docs</a>
+                </div>
+                
+                <div class="card">
+                    <h3>Project Structure</h3>
+                    <p>Learn about the codebase organization and architecture.</p>
+                    <a href="readme.html#structure" class="button">View Structure</a>
+                </div>
+            </div>
+        </section>
+
+        <div class="footer">
+            <p>ContextFlix - Personalized Movie Recommender System</p>
+        </div>
+    </div>
+</body>
+</html> 

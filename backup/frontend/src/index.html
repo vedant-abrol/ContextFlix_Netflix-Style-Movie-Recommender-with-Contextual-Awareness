@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContextFlix - Personalized Movie Recommender</title>
+    <meta name="description" content="A Netflix-style personalized movie recommendation system with contextual awareness">
+    
+    <!-- Load React, React DOM, and Babel from CDN -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Load Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load React Router from CDN -->
+    <script crossorigin src="https://unpkg.com/react-router-dom@6/umd/react-router-dom.production.min.js"></script>
+    
+    <!-- Load Axios from CDN -->
+    <script crossorigin src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
+    <!-- Netflix-inspired custom styles -->
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-red-hover: #B81D24;
+            --netflix-black: #141414;
+            --netflix-dark-gray: #181818;
+            --netflix-light-gray: #808080;
+            --netflix-white: #FFFFFF;
+        }
+        
+        body {
+            background-color: var(--netflix-black);
+            color: var(--netflix-white);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Netflix-style button */
+        .netflix-button {
+            background-color: var(--netflix-red);
+            color: var(--netflix-white);
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .netflix-button:hover {
+            background-color: var(--netflix-red-hover);
+        }
+        
+        /* Movie card hover effect */
+        .movie-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .movie-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+            z-index: 10;
+        }
+        
+        /* Carousel row */
+        .carousel-row {
+            position: relative;
+            margin-bottom: 40px;
+            padding: 0 4%;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--netflix-black);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--netflix-light-gray);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--netflix-red);
+        }
+        
+        /* Hero banner section */
+        .hero-banner {
+            height: 80vh;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(to top, var(--netflix-black), transparent 90%);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+        }
+        
+        /* Movie details modal */
+        .movie-modal {
+            background-color: rgba(0, 0, 0, 0.8);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .movie-modal-content {
+            background-color: var(--netflix-dark-gray);
+            border-radius: 8px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
+    
+    <!-- Tailwind config extension -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'netflix-red': '#E50914',
+                        'netflix-black': '#141414',
+                        'netflix-dark-gray': '#181818',
+                        'netflix-light-gray': '#808080'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Root element for React -->
+    <div id="root"></div>
+    
+    <!-- Component scripts -->
+    <script type="text/babel" src="components/Navbar.jsx"></script>
+    <script type="text/babel" src="components/MovieCard.jsx"></script>
+    <script type="text/babel" src="components/MovieRow.jsx"></script>
+    <script type="text/babel" src="components/HeroBanner.jsx"></script>
+    <script type="text/babel" src="components/MovieModal.jsx"></script>
+    <script type="text/babel" src="components/UserProfile.jsx"></script>
+    <script type="text/babel" src="components/ContextSelector.jsx"></script>
+    <script type="text/babel" src="components/Explanation.jsx"></script>
+    <script type="text/babel" src="components/UserHistory.jsx"></script>
+    <script type="text/babel" src="components/GenreList.jsx"></script>
+    <script type="text/babel" src="components/SearchBox.jsx"></script>
+    
+    <!-- API Service -->
+    <script type="text/babel" src="components/ApiService.jsx"></script>
+    
+    <!-- App.jsx (must be loaded last) -->
+    <script type="text/babel" src="App.jsx"></script>
+
+    <!-- Initialize the application -->
+    <script type="text/babel">
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<App />);
+    </script>
+</body>
+</html> 

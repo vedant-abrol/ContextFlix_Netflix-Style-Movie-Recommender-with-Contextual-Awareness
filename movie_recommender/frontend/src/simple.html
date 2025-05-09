@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContextFlix - Simple Test</title>
+    
+    <!-- Load React, React DOM, and Babel from CDN (development versions) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Load Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        body {
+            background-color: #141414;
+            color: white;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const SimpleApp = () => {
+            return (
+                <div className="p-8 max-w-lg mx-auto mt-10 bg-gray-800 rounded-lg">
+                    <h1 className="text-3xl font-bold text-red-600 mb-4">ContextFlix</h1>
+                    <p className="mb-4">This is a simple test to verify React is working correctly.</p>
+                    <button className="bg-red-600 text-white px-4 py-2 rounded" onClick={() => alert('React is working!')}>
+                        Test React
+                    </button>
+                </div>
+            );
+        };
+        
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<SimpleApp />);
+    </script>
+</body>
+</html> 

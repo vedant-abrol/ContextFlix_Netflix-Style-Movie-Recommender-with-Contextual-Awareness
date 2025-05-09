@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ContextFlix - Running Instructions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #E50914;
+            border-bottom: 2px solid #E50914;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #333;
+            margin-top: 30px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: monospace;
+            background-color: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        .note {
+            background-color: #e8f4f8;
+            border-left: 4px solid #5bc0de;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        .warning {
+            background-color: #fcf8e3;
+            border-left: 4px solid #f0ad4e;
+            padding: 10px 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        ul {
+            padding-left: 25px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        a {
+            color: #E50914;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .test-links {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .test-links a {
+            display: inline-block;
+            margin-right: 15px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>ContextFlix - Personalized Movie Recommender</h1>
+    
+    <p>Welcome to ContextFlix, a context-aware movie recommendation system. This document provides instructions on how to run and use the application.</p>
+    
+    <h2>Project Structure</h2>
+    <p>The project is organized into the following main components:</p>
+    <ul>
+        <li><strong>Frontend</strong>: React-based web interface for user interaction</li>
+        <li><strong>API</strong>: Flask-based backend service that provides recommendations</li>
+        <li><strong>Models</strong>: Recommendation algorithms and data processing pipelines</li>
+    </ul>
+    
+    <h2>Running the Application</h2>
+    <p>To run the application, you need to start both the API server and the frontend server:</p>
+    
+    <h3>1. Start the API Server</h3>
+    <pre>cd movie_recommender
+source contextflix_env/bin/activate
+cd api
+python app.py</pre>
+    <p>This will start the API server on <code>http://localhost:5050</code>.</p>
+    
+    <h3>2. Start the Frontend Server</h3>
+    <pre>cd movie_recommender/frontend
+source ../contextflix_env/bin/activate
+python serve.py</pre>
+    <p>This will start the frontend server on <code>http://localhost:3000</code>.</p>
+    
+    <div class="note">
+        <p><strong>Note:</strong> Both servers need to be running simultaneously for the application to work properly.</p>
+    </div>
+    
+    <h2>Troubleshooting</h2>
+    <p>If you encounter issues, here are some common problems and solutions:</p>
+    
+    <h3>Port Already in Use</h3>
+    <p>If you see an error like "Address already in use", you need to kill the process using that port:</p>
+    <pre>lsof -i :5050 | grep LISTEN  # Check processes using port 5050
+kill -9 [PID]             # Kill the process</pre>
+    
+    <h3>API Connection Issues</h3>
+    <p>If the frontend can't connect to the API, check the following:</p>
+    <ul>
+        <li>Make sure the API server is running at <code>http://localhost:5050</code></li>
+        <li>Check that CORS is properly configured (the API should return appropriate headers)</li>
+        <li>Use the API diagnostics page to test specific endpoints</li>
+    </ul>
+    
+    <h2>Testing Resources</h2>
+    <div class="test-links">
+        <p>These test pages can help you verify that components are working correctly:</p>
+        <a href="/test.html">Connection Test Tool</a>
+        <a href="/apidiag.html">API Diagnostics</a>
+        <a href="/simple.html">React Test</a>
+        <a href="/">Main Application</a>
+    </div>
+    
+    <h2>Using the Application</h2>
+    <p>Once both servers are running:</p>
+    <ol>
+        <li>Open <a href="http://localhost:3000">http://localhost:3000</a> in your browser</li>
+        <li>Select a user ID to see personalized recommendations</li>
+        <li>Explore recommendations based on different contexts (time of day, device type)</li>
+        <li>View movie details and similar movies</li>
+    </ol>
+    
+    <div class="warning">
+        <p><strong>Important:</strong> The application requires both the frontend and API servers to be running concurrently.</p>
+    </div>
+</body>
+</html> 

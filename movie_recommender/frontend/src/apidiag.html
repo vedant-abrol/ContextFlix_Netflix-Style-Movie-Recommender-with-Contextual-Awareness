@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Diagnostic Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #E50914;
+        }
+        .control-panel {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .result-panel {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 5px;
+            min-height: 200px;
+        }
+        button {
+            background-color: #E50914;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        input, select {
+            padding: 8px;
+            margin: 5px 0;
+            border-radius: 4px;
+            border: 1px solid #555;
+            background-color: #333;
+            color: #f0f0f0;
+        }
+        .endpoint-group {
+            margin-bottom: 15px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        .success {
+            color: #4CAF50;
+        }
+        .error {
+            color: #f44336;
+        }
+        pre {
+            background-color: #333;
+            padding: 10px;
+            overflow: auto;
+            border-radius: 4px;
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ContextFlix API Diagnostic Tool</h1>
+        
+        <div class="control-panel">
+            <h2>API Connection Settings</h2>
+            <div>
+                <label for="apiHost">API Host:</label>
+                <input type="text" id="apiHost" value="localhost" />
+                <label for="apiPort">Port:</label>
+                <input type="number" id="apiPort" value="5050" />
+                <button onclick="updateBaseUrl()">Update</button>
+            </div>
+            <p>Current Base URL: <span id="currentBaseUrl">http://localhost:5050/api</span></p>
+            
+            <div class="endpoint-group">
+                <h3>Basic Endpoints</h3>
+                <button onclick="testEndpoint('/health')">Health Check</button>
+                <button onclick="testEndpoint('/users')">Users</button>
+                <button onclick="testEndpoint('/movie_genres')">Genres</button>
+            </div>
+            
+            <div class="endpoint-group">
+                <h3>Parametrized Endpoints</h3>
+                <div>
+                    <label for="userId">User ID:</label>
+                    <input type="number" id="userId" value="1" />
+                    <button onclick="testEndpoint(`/recommend?user_id=${document.getElementById('userId').value}`)">Recommendations</button>
+                    <button onclick="testEndpoint(`/user_history?user_id=${document.getElementById('userId').value}`)">User History</button>
+                    <button onclick="testEndpoint(`/user_preferences?user_id=${document.getElementById('userId').value}`)">User Preferences</button>
+                </div>
+                <div style="margin-top: 10px;">
+                    <label for="movieId">Movie ID:</label>
+                    <input type="number" id="movieId" value="1" />
+                    <button onclick="testEndpoint(`/similar_movies?movie_id=${document.getElementById('movieId').value}`)">Similar Movies</button>
+                </div>
+            </div>
+            
+            <div class="endpoint-group">
+                <h3>Custom Request</h3>
+                <div>
+                    <input type="text" id="customEndpoint" placeholder="/custom/endpoint" style="width: 300px;" />
+                    <button onclick="testEndpoint(document.getElementById('customEndpoint').value)">Test Custom Endpoint</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="result-panel">
+            <h2>Results</h2>
+            <div id="requestDetails"></div>
+            <pre id="responseData"></pre>
+            <div id="logArea"></div>
+        </div>
+    </div>
+    
+    <script>
+        let baseUrl = 'http://localhost:5050/api';
+        
+        function updateBaseUrl() {
+            const host = document.getElementById('apiHost').value;
+            const port = document.getElementById('apiPort').value;
+            baseUrl = `http://${host}:${port}/api`;
+            document.getElementById('currentBaseUrl').textContent = baseUrl;
+            addLogEntry(`Base URL updated to: ${baseUrl}`, 'success');
+        }
+        
+        function addLogEntry(message, type = 'normal') {
+            const logArea = document.getElementById('logArea');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            
+            const timestamp = new Date().toLocaleTimeString();
+            entry.textContent = `[${timestamp}] ${message}`;
+            
+            logArea.insertBefore(entry, logArea.firstChild);
+        }
+        
+        function testEndpoint(endpoint) {
+            const fullUrl = `${baseUrl}${endpoint}`;
+            const requestDetails = document.getElementById('requestDetails');
+            const responseData = document.getElementById('responseData');
+            
+            requestDetails.innerHTML = `<p><strong>Request:</strong> GET ${fullUrl}</p>`;
+            responseData.textContent = 'Loading...';
+            
+            addLogEntry(`Testing endpoint: ${endpoint}`);
+            
+            fetch(fullUrl, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                const statusLine = `Response status: ${response.status} ${response.statusText}`;
+                requestDetails.innerHTML += `<p><strong>${statusLine}</strong></p>`;
+                
+                if (!response.ok) {
+                    addLogEntry(`${statusLine}`, 'error');
+                    throw new Error(`Status: ${response.status}`);
+                }
+                
+                addLogEntry(`${statusLine}`, 'success');
+                return response.json();
+            })
+            .then(data => {
+                responseData.textContent = JSON.stringify(data, null, 2);
+                addLogEntry(`Response: ${JSON.stringify(data).substring(0, 100)}${JSON.stringify(data).length > 100 ? '...' : ''}`, 'success');
+            })
+            .catch(error => {
+                responseData.textContent = `Error: ${error.message}`;
+                addLogEntry(`Error: ${error.message}`, 'error');
+            });
+        }
+        
+        // On page load, add a log entry
+        window.onload = function() {
+            addLogEntry('API Diagnostic Tool loaded');
+            addLogEntry(`Using API base URL: ${baseUrl}`);
+        };
+    </script>
+</body>
+</html> 

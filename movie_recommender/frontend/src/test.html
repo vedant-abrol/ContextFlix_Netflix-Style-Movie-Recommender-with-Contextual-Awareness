@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ContextFlix Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #E50914;
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        button {
+            background-color: #E50914;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            overflow: auto;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>ContextFlix Connection Test</h1>
+    
+    <h2>1. Frontend Server</h2>
+    <div id="frontendStatus" class="status success">
+        Frontend server is running at http://localhost:3000/
+    </div>
+    
+    <h2>2. API Server Test</h2>
+    <div id="apiStatus" class="status">
+        <p>Checking API connection...</p>
+    </div>
+    <button onclick="testAPIConnection()">Test API Connection</button>
+    
+    <h2>3. File Access Test</h2>
+    <div id="fileStatus" class="status">
+        <p>Testing file access...</p>
+    </div>
+    <button onclick="testFileAccess()">Test File Access</button>
+    
+    <h2>4. Main App Test</h2>
+    <p>If all tests pass, try accessing the main application:</p>
+    <a href="/" style="display: inline-block; margin-top: 10px;">Open Main Application</a>
+    
+    <div id="log" style="margin-top: 30px;">
+        <h3>Debug Log:</h3>
+        <pre id="debugLog"></pre>
+    </div>
+    
+    <script>
+        // Logging function
+        function log(message) {
+            const logElement = document.getElementById('debugLog');
+            const timestamp = new Date().toLocaleTimeString();
+            logElement.textContent += `[${timestamp}] ${message}\n`;
+        }
+        
+        // Test API connection
+        function testAPIConnection() {
+            const apiStatus = document.getElementById('apiStatus');
+            apiStatus.className = 'status';
+            apiStatus.innerHTML = '<p>Testing API connection...</p>';
+            
+            log('Testing API connection to http://localhost:5050/api/health');
+            
+            fetch('http://localhost:5050/api/health', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                log(`API response: ${JSON.stringify(data)}`);
+                apiStatus.className = 'status success';
+                apiStatus.innerHTML = '<p>API connection successful! Server is healthy.</p>';
+            })
+            .catch(error => {
+                log(`API connection error: ${error.message}`);
+                apiStatus.className = 'status error';
+                apiStatus.innerHTML = `<p>API connection failed: ${error.message}</p>
+                    <p>Make sure the API server is running at http://localhost:5050/</p>`;
+            });
+        }
+        
+        // Test file access
+        function testFileAccess() {
+            const fileStatus = document.getElementById('fileStatus');
+            fileStatus.className = 'status';
+            fileStatus.innerHTML = '<p>Testing file access...</p>';
+            
+            const files = [
+                'components/ApiService.jsx',
+                'components/Navbar.jsx',
+                'App.jsx',
+                'index.html'
+            ];
+            
+            let successCount = 0;
+            let failedFiles = [];
+            
+            Promise.all(files.map(file => {
+                log(`Testing access to ${file}`);
+                return fetch(file)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`${file}: ${response.status}`);
+                        }
+                        successCount++;
+                        return `${file}: OK`;
+                    })
+                    .catch(error => {
+                        failedFiles.push(file);
+                        return `${file}: Failed - ${error.message}`;
+                    });
+            }))
+            .then(results => {
+                log(`File access test results: ${results.join(', ')}`);
+                
+                if (successCount === files.length) {
+                    fileStatus.className = 'status success';
+                    fileStatus.innerHTML = `<p>All ${files.length} files accessible!</p>`;
+                } else {
+                    fileStatus.className = 'status error';
+                    fileStatus.innerHTML = `<p>Some files couldn't be accessed:</p>
+                        <ul>${failedFiles.map(file => `<li>${file}</li>`).join('')}</ul>`;
+                }
+            });
+        }
+        
+        // Run some tests on page load
+        window.onload = function() {
+            log('Page loaded, running automated tests...');
+            setTimeout(testFileAccess, 500);
+            setTimeout(testAPIConnection, 1000);
+        };
+    </script>
+</body>
+</html> 

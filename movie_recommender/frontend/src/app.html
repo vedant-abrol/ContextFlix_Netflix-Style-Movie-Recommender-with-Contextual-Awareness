@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ContextFlix - Personalized Movie Recommender</title>
+    
+    <!-- Load React, React DOM, and Babel from CDN (development versions) -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Load Tailwind CSS from CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Load Axios from CDN -->
+    <script crossorigin src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
+    <!-- Netflix-inspired custom styles -->
+    <style>
+        :root {
+            --netflix-red: #E50914;
+            --netflix-red-hover: #B81D24;
+            --netflix-black: #141414;
+            --netflix-dark-gray: #181818;
+            --netflix-light-gray: #808080;
+            --netflix-white: #FFFFFF;
+        }
+        
+        body {
+            background-color: var(--netflix-black);
+            color: var(--netflix-white);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .netflix-button {
+            background-color: var(--netflix-red);
+            color: var(--netflix-white);
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .netflix-button:hover {
+            background-color: var(--netflix-red-hover);
+        }
+        
+        .movie-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            margin: 8px;
+            overflow: hidden;
+            border-radius: 4px;
+            position: relative;
+        }
+        
+        .movie-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        
+        .movie-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0));
+            padding: 15px;
+        }
+    </style>
+    
+</head>
+<body>
+    <div id="app"></div>
+    
+    <script type="text/babel">
+        // API Service
+        const API_BASE_URL = 'http://localhost:5050/api';
+        
+        const ApiService = {
+            checkHealth: async () => {
+                try {
+                    const response = await axios.get(`${API_BASE_URL}/health`);
+                    return response.data;
+                } catch (error) {
+                    console.error('API health check failed:', error);
+                    return { status: 'unavailable' };
+                }
+            },
+            
+            getUsers: async () => {
+                try {
+                    const response = await axios.get(`${API_BASE_URL}/users`);
+                    return response.data.users;
+                } catch (error) {
+                    console.error('Error fetching users:', error);
+                    throw error;
+                }
+            },
+            
+            getMovieGenres: async () => {
+                try {
+                    const response = await axios.get(`${API_BASE_URL}/movie_genres`);
+                    return response.data.genres;
+                } catch (error) {
+                    console.error('Error fetching genres:', error);
+                    throw error;
+                }
+            },
+            
+            getRecommendations: async (userId, context = {}) => {
+                try {
+                    const response = await axios.get(`${API_BASE_URL}/recommendations/user/${userId}`, {
+                        params: context
+                    });
+                    return response.data.recommendations;
+                } catch (error) {
+                    console.error('Error fetching recommendations:', error);
+                    throw error;
+                }
+            }
+        };
+        
+        // Navigation component
+        const Navbar = ({ currentUser, onHome, onHistory }) => {
+            return (
+                <nav className="bg-netflix-dark-gray p-4 shadow-md">
+                    <div className="flex justify-between items-center">
+                        <h1 className="text-netflix-red text-2xl font-bold">ContextFlix</h1>
+                        
+                        <div className="flex space-x-4">
+                            <button 
+                                className="netflix-button" 
+                                onClick={onHome}
+                            >
+                                Home
+                            </button>
+                            
+                            <button 
+                                className="netflix-button" 
+                                onClick={onHistory}
+                            >
+                                History
+                            </button>
+                            
+                            {currentUser && (
+                                <div className="flex items-center space-x-2">
+                                    <div className="w-8 h-8 rounded-full bg-netflix-red flex items-center justify-center">
+                                        {currentUser.gender === 'M' ? '♂' : '♀'}
+                                    </div>
+                                    <span>User {currentUser.id}</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+        
+        // User selection component
+        const UserSelection = ({ users, onUserSelect }) => {
+            return (
+                <div className="p-6">
+                    <h2 className="text-2xl mb-6 text-center">Select a User Profile</h2>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {users.map(user => (
+                            <div 
+                                key={user.id}
+                                className="bg-netflix-dark-gray p-4 rounded-lg cursor-pointer hover:bg-gray-800 transition"
+                                onClick={() => onUserSelect(user)}
+                            >
+                                <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-netflix-red flex items-center justify-center text-3xl">
+                                    {user.gender === 'M' ? '♂' : '♀'}
+                                </div>
+                                <h3 className="text-xl text-center">User {user.id}</h3>
+                                <p className="text-center text-netflix-light-gray">
+                                    {user.rating_count} ratings (Avg: {user.avg_rating.toFixed(1)})
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+        
+        // Movie card component
+        const MovieCard = ({ movie }) => {
+            // Generate a random color for the movie card background
+            const randomColor = () => {
+                const colors = ['#E50914', '#5E35B1', '#039BE5', '#43A047', '#FFB300', '#8D6E63'];
+                return colors[Math.floor(Math.random() * colors.length)];
+            };
+            
+            return (
+                <div className="movie-card" style={{ width: '150px', height: '225px', backgroundColor: randomColor() }}>
+                    <div className="movie-info">
+                        <h3 className="text-white text-sm font-bold truncate">{movie.title}</h3>
+                        <div className="flex items-center mt-1">
+                            <span className="text-yellow-400 text-xs">★ {movie.rating?.toFixed(1) || 'N/A'}</span>
+                            <span className="text-xs ml-2 text-netflix-light-gray">
+                                {movie.year || 'Unknown'}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+        
+        // MovieRow component
+        const MovieRow = ({ title, movies }) => {
+            return (
+                <div className="mb-10">
+                    <h2 className="text-xl md:text-2xl mb-4 px-6">{title}</h2>
+                    <div className="flex overflow-x-auto px-6 pb-2 no-scrollbar">
+                        {movies.map((movie, index) => (
+                            <MovieCard key={index} movie={movie} />
+                        ))}
+                        
+                        {movies.length === 0 && (
+                            <div className="text-netflix-light-gray italic">
+                                No movies to display
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+        
+        // Main app component
+        const App = () => {
+            const [currentUser, setCurrentUser] = React.useState(null);
+            const [users, setUsers] = React.useState([]);
+            const [loading, setLoading] = React.useState(true);
+            const [error, setError] = React.useState(null);
+            const [apiAvailable, setApiAvailable] = React.useState(true);
+            const [recommendations, setRecommendations] = React.useState([]);
+            const [view, setView] = React.useState('home'); // 'home', 'users', 'history'
+            
+            // Generate mock genre data
+            const genres = [
+                { name: 'Comedy', movies: [] },
+                { name: 'Action', movies: [] },
+                { name: 'Drama', movies: [] },
+                { name: 'Thriller', movies: [] }
+            ];
+            
+            // Generate mock movie data for when API is not available
+            const generateMockMovies = (count = 10) => {
+                return Array.from({ length: count }, (_, i) => ({
+                    id: i + 1,
+                    title: `Mock Movie ${i + 1}`,
+                    year: 2000 + Math.floor(Math.random() * 24),
+                    rating: Math.random() * 5,
+                    genres: ['Comedy', 'Action', 'Drama'][Math.floor(Math.random() * 3)]
+                }));
+            };
+            
+            // Check API health on mount
+            React.useEffect(() => {
+                const checkApiHealth = async () => {
+                    try {
+                        const health = await ApiService.checkHealth();
+                        setApiAvailable(health.status === 'healthy');
+                    } catch (error) {
+                        setApiAvailable(false);
+                    }
+                };
+                
+                checkApiHealth();
+            }, []);
+            
+            // Fetch users
+            React.useEffect(() => {
+                const fetchUsers = async () => {
+                    try {
+                        setLoading(true);
+                        
+                        if (apiAvailable) {
+                            try {
+                                const fetchedUsers = await ApiService.getUsers();
+                                setUsers(fetchedUsers);
+                            } catch (apiError) {
+                                fallbackToMockUsers();
+                            }
+                        } else {
+                            fallbackToMockUsers();
+                        }
+                        
+                        setLoading(false);
+                    } catch (err) {
+                        setError('Failed to load users.');
+                        setLoading(false);
+                    }
+                };
+                
+                const fallbackToMockUsers = () => {
+                    console.log('Using mock user data');
+                    const mockUsers = Array.from({ length: 5 }, (_, i) => ({
+                        id: i + 1,
+                        gender: i % 2 === 0 ? 'M' : 'F',
+                        rating_count: Math.floor(Math.random() * 100) + 20,
+                        avg_rating: (Math.random() * 2) + 3
+                    }));
+                    
+                    setUsers(mockUsers);
+                    setApiAvailable(false);
+                };
+                
+                fetchUsers();
+            }, [apiAvailable]);
+            
+            // Handle user selection
+            const handleUserSelect = (user) => {
+                setCurrentUser(user);
+                setView('home');
+                
+                // Populate with mock data for now
+                setRecommendations(generateMockMovies(20));
+                
+                // Update genres with mock data
+                genres.forEach(genre => {
+                    genre.movies = generateMockMovies(5);
+                });
+            };
+            
+            // Navigation handlers
+            const handleHomeClick = () => setView('home');
+            const handleHistoryClick = () => setView('history');
+            
+            // Loading state
+            if (loading) {
+                return (
+                    <div className="flex items-center justify-center h-screen">
+                        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-netflix-red"></div>
+                    </div>
+                );
+            }
+            
+            // Error state
+            if (error) {
+                return (
+                    <div className="flex flex-col items-center justify-center h-screen p-4">
+                        <div className="text-netflix-red text-2xl mb-4">Error</div>
+                        <div className="mb-4">{error}</div>
+                        <button 
+                            className="netflix-button"
+                            onClick={() => window.location.reload()}
+                        >
+                            Retry
+                        </button>
+                    </div>
+                );
+            }
+            
+            // Determine which view to show
+            let content;
+            
+            if (!currentUser) {
+                // No user selected, show user selection
+                content = <UserSelection users={users} onUserSelect={handleUserSelect} />;
+            } else if (view === 'home') {
+                // Home view with recommendations
+                content = (
+                    <div>
+                        <div className="py-8 px-6">
+                            <h2 className="text-3xl mb-6">Recommended for You</h2>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+                                {recommendations.slice(0, 12).map((movie, index) => (
+                                    <MovieCard key={index} movie={movie} />
+                                ))}
+                            </div>
+                        </div>
+                        
+                        {/* Genre sections */}
+                        {genres.map((genre, index) => (
+                            <MovieRow 
+                                key={index}
+                                title={genre.name} 
+                                movies={genre.movies} 
+                            />
+                        ))}
+                    </div>
+                );
+            } else if (view === 'history') {
+                // History view
+                content = (
+                    <div className="p-6">
+                        <h2 className="text-2xl mb-6">Viewing History</h2>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
+                            {generateMockMovies(8).map((movie, index) => (
+                                <MovieCard key={index} movie={movie} />
+                            ))}
+                        </div>
+                    </div>
+                );
+            }
+            
+            return (
+                <div className="min-h-screen flex flex-col">
+                    {/* API status warning */}
+                    {!apiAvailable && (
+                        <div className="bg-yellow-600 text-white text-center p-2 text-sm">
+                            API server not available. Using mock data instead.
+                        </div>
+                    )}
+                    
+                    {/* Navbar */}
+                    <Navbar 
+                        currentUser={currentUser}
+                        onHome={handleHomeClick}
+                        onHistory={handleHistoryClick}
+                    />
+                    
+                    {/* Main content */}
+                    <main className="flex-grow">
+                        {content}
+                    </main>
+                    
+                    {/* Footer */}
+                    <footer className="bg-black text-netflix-light-gray text-sm p-4 text-center">
+                        <p>ContextFlix Personalized Movie Recommender</p>
+                    </footer>
+                </div>
+            );
+        };
+        
+        ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+    </script>
+</body>
+</html> 
