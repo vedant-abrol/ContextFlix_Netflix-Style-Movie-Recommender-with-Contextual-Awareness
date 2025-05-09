@@ -41,7 +41,6 @@ This project specifically aligns with skills sought by companies like Netflix fo
 
 <div align="center">
   <p align="center">
-    <img src="https://via.placeholder.com/800x400.png?text=ContextFlix+System+Flowchart" alt="ContextFlix System Overview" width="80%"/>
   </p>
 </div>
 
@@ -79,7 +78,7 @@ This project specifically aligns with skills sought by companies like Netflix fo
 
 <div align="center">
   <p align="center">
-    <img src="https://via.placeholder.com/800x500.png?text=ContextFlix+Architecture+Diagram" alt="ContextFlix Architecture" width="80%"/>
+    
   </p>
 </div>
 
@@ -165,7 +164,7 @@ movie_recommender/
 
 <div align="center">
   <p align="center">
-    <img src="https://via.placeholder.com/600x300.png?text=Matrix+Factorization+Architecture" alt="Matrix Factorization Architecture" width="60%"/>
+    
   </p>
 </div>
 
@@ -207,7 +206,7 @@ class MatrixFactorization(nn.Module):
 
 <div align="center">
   <p align="center">
-    <img src="https://via.placeholder.com/600x300.png?text=Content-Based+Model+Architecture" alt="Content-Based Model Architecture" width="60%"/>
+    
   </p>
 </div>
 
@@ -238,7 +237,7 @@ class ContentBasedModel(nn.Module):
 
 <div align="center">
   <p align="center">
-    <img src="https://via.placeholder.com/600x400.png?text=Transformer+Architecture" alt="Transformer Architecture" width="60%"/>
+    
   </p>
 </div>
 
@@ -292,7 +291,7 @@ class TransformerRecommender(nn.Module):
 
 <div align="center">
   <p align="center">
-    <img src="https://via.placeholder.com/700x400.png?text=Hybrid+Ensemble+Architecture" alt="Hybrid Ensemble Architecture" width="70%"/>
+    
   </p>
 </div>
 
@@ -341,10 +340,7 @@ class HybridRecommender(nn.Module):
 
 <div align="center">
   <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
-    <img src="https://via.placeholder.com/400x250.png?text=Home+Page" alt="Home Page" width="45%"/>
-    <img src="https://via.placeholder.com/400x250.png?text=Movie+Detail" alt="Movie Detail" width="45%"/>
-    <img src="https://via.placeholder.com/400x250.png?text=User+Selection" alt="User Selection" width="45%"/>
-    <img src="https://via.placeholder.com/400x250.png?text=Mobile+View" alt="Mobile View" width="45%"/>
+    
   </div>
 </div>
 
@@ -461,7 +457,7 @@ Open a web browser and navigate to:
 
 <div align="center">
   <p align="center">
-    <img src="https://via.placeholder.com/700x400.png?text=Performance+Metrics+Comparison" alt="Performance Metrics" width="70%"/>
+    
   </p>
 </div>
 
@@ -477,7 +473,7 @@ Open a web browser and navigate to:
 
 <div align="center">
   <p align="center">
-    <img src="https://via.placeholder.com/700x400.png?text=A/B+Testing+Results" alt="A/B Testing Results" width="70%"/>
+    
   </p>
 </div>
 
@@ -492,7 +488,7 @@ Open a web browser and navigate to:
 
 <div align="center">
   <p align="center">
-    <img src="https://via.placeholder.com/700x400.png?text=Contextual+Impact+Analysis" alt="Contextual Impact Analysis" width="70%"/>
+   
   </p>
 </div>
 
