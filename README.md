@@ -10,7 +10,7 @@
   <img src="https://img.shields.io/badge/MovieLens-1M-orange.svg" alt="MovieLens 1M"/>
   <br><br>
   <p align="center">
-    <img src="https://via.placeholder.com/800x400.png?text=ContextFlix+Netflix-Style+UI" alt="ContextFlix Demo Screenshot" width="80%"/>
+    <img width="1505" alt="Image" src="https://github.com/user-attachments/assets/45200f97-11dd-4bc6-a95c-0fe605cfc22d" />
   </p>
   <h3>A sophisticated recommendation system combining collaborative filtering, content-based filtering, and sequential modeling with contextual awareness</h3>
 </div>
