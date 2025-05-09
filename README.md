@@ -1,5 +1,7 @@
 # ContextFlix: Netflix-Style Movie Recommender with Contextual Awareness
 
+![Image](https://github.com/user-attachments/assets/b76dc337-179a-422e-8cba-8bc7ecd41c7f)
+
 <div align="center">
   <img src="https://img.shields.io/badge/Python-3.8+-blue.svg" alt="Python 3.8+"/>
   <img src="https://img.shields.io/badge/PyTorch-2.0+-red.svg" alt="PyTorch 2.0+"/>
